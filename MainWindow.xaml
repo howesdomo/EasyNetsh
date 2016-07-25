@@ -1,0 +1,75 @@
+﻿<Window x:Class="EasyNetsh.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EasyNetsh"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="EasyNetsh V 0.0.0.0" Height="350" Width="525">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.3*"></ColumnDefinition>
+            <ColumnDefinition Width="0.7*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="gChangYong">
+            <ScrollViewer>
+                <StackPanel x:Name="spChangyong">
+
+                </StackPanel>
+            </ScrollViewer>
+
+        </Grid>
+        <Grid x:Name="gSheZhi" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.2*"></ColumnDefinition>
+                    <ColumnDefinition Width="0.8*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label>设置目标</Label>
+                <ComboBox Grid.Column="1" ItemsSource="{Binding DeviceList}" DisplayMemberPath="DisplayName" SelectedItem="{Binding SelectedDevice, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+            </Grid>
+            <Button x:Name="btnDHCP" Content="DHCP" Grid.Row="1"></Button>
+            <Button x:Name="btnSetBySelf" Content="设置" Grid.Row="2" IsEnabled="{Binding BtnEnabled, Mode=OneWay}"></Button>
+            <Grid Grid.Row="3" Grid.RowSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Row="1">
+                    <TextBlock Text="名称"></TextBlock>
+                    <TextBox x:Name="txtName" Text="{Binding NickName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <TextBlock Text="IP"></TextBlock>
+                    <TextBox x:Name="txtIP" Text="{Binding Ip, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+                    <TextBlock Text="网关"></TextBlock>
+                    <TextBox x:Name="txtGateway" Text="{Binding Gateway, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="2">
+                    <TextBlock Text="子网掩码"></TextBlock>
+                    <TextBox x:Name="txtSubMask" Text="{Binding SubMask, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="3">
+                    <TextBlock Text="首选DNS"></TextBlock>
+                    <TextBox x:Name="txtDNS1" Text="{Binding Dns1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+                    <TextBlock Text="备用DNS"></TextBlock>
+                    <TextBox x:Name="txtDNS2" Text="{Binding Dns2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
