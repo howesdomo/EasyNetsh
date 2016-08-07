@@ -51,7 +51,7 @@
 
                 <StackPanel Grid.Row="1">
                     <TextBlock Text="名称"></TextBlock>
-                    <TextBox x:Name="txtName" Text="{Binding NickName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+                    <TextBox x:Name="txtName" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
                 </StackPanel>
                 <StackPanel Grid.Row="1" Grid.Column="1">
                     <TextBlock Text="IP"></TextBlock>

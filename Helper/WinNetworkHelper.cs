@@ -7,13 +7,15 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 
-namespace EasyNetsh
+namespace Howe.Helper
 {
 
     /// <summary>
+    /// Author : Howe
+    /// Date   : 2016-8-7 13:12:12
+    /// Description : 获取windows系统网卡信息
     /// 
     /// NetworkInterface 知识总结
-    /// 
     /// 区分 PnpInstanceID     
     /// 如果前面有 PCI 就是本机的真实网卡    
     /// MediaSubType 为 01 则是常见网卡，02为无线网卡。 
