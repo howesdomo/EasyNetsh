@@ -21,6 +21,7 @@ namespace Howe.Helper
         {
             //string _doscmd = "netsh interface ip set address 本地连接 DHCP";
             string _doscmd = string.Format("netsh interface ip set address {0} DHCP", targetDevice);
+            string _doscmd_dns = string.Format("netsh interface ip set dns {0} dhcp", targetDevice);
             using (Process p = new Process())
             {
                 p.StartInfo.FileName = "cmd.exe";
@@ -30,9 +31,8 @@ namespace Howe.Helper
                 p.StartInfo.RedirectStandardError = true;
                 p.StartInfo.CreateNoWindow = true;
                 p.Start();
-                p.StandardInput.WriteLine(_doscmd.ToString());
-                _doscmd = "netsh interface ip set address name=\"WLAN\" source=dhcp";
-                p.StandardInput.WriteLine(_doscmd.ToString());
+                p.StandardInput.WriteLine(_doscmd);
+                p.StandardInput.WriteLine(_doscmd_dns);
                 p.Refresh();
                 p.StandardInput.WriteLine("exit");
             }
