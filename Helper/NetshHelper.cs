@@ -76,7 +76,7 @@ namespace Howe.Helper
                     // 首选DNS服务器
                     // netsh interface ip set dnsservers name="无线网络连接" static addr=202.96.134.33 primary
                     //_doscmd = "netsh interface ip set dnsservers name=\"无线网络连接\" static addr=" + dns1 + " primary";
-                    _doscmd =  string.Format("netsh interface ip set dnsservers name=\"WLAN\" static addr={0} primary", dns1);
+                    _doscmd = string.Format("netsh interface ip set dnsservers name=\"{0}\" static addr={1} primary", targetDevice, dns1);
 
                     p.StandardInput.WriteLine(_doscmd.ToString());
                 }
@@ -87,7 +87,7 @@ namespace Howe.Helper
                     // netsh interface ip add dnsservers name="无线网络连接" addr=202.96.128.86 index=2
                     //_doscmd = "netsh interface ip add dnsservers name=\"无线网络连接\" addr=" + dns2 + " index=2";
                     //_doscmd = "netsh interface ip add dnsservers name=\"WLAN\" addr=" + dns2 + " index=2";
-                    _doscmd = string.Format("netsh interface ip add dnsservers name=\"WLAN\" addr={0} index=2", dns2);
+                    _doscmd = string.Format("netsh interface ip add dnsservers name=\"{0}\" addr={1} index=2", targetDevice, dns2);
                     p.StandardInput.WriteLine(_doscmd.ToString());
                 }
 
@@ -95,6 +95,71 @@ namespace Howe.Helper
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public static string WinsockReset()
+        {
+            int exitCode;
+            System.Diagnostics.ProcessStartInfo processInfo;
+            System.Diagnostics.Process process;
 
+            processInfo = new System.Diagnostics.ProcessStartInfo("cmd.exe", "/c netsh winsock reset");
+            processInfo.CreateNoWindow = false;
+            processInfo.UseShellExecute = false;
+            // *** Redirect the output ***
+            processInfo.RedirectStandardError = true;
+            processInfo.RedirectStandardOutput = true;
+
+            process = System.Diagnostics.Process.Start(processInfo);
+
+            process.WaitForExit();
+
+            // *** Read the streams ***
+            // Warning: This approach can lead to deadlocks, see Edit #2
+            string output = process.StandardOutput.ReadToEnd();
+            string error = process.StandardError.ReadToEnd();
+
+            exitCode = process.ExitCode;
+
+            // Console.WriteLine("output>>" + (String.IsNullOrEmpty(output) ? "(none)" : output));
+            // Console.WriteLine("error>>" + (String.IsNullOrEmpty(error) ? "(none)" : error));
+            // Console.WriteLine("ExitCode: " + exitCode.ToString(), "ExecuteCommand");
+            process.Close();
+
+            return error;
+
+        }
+
+        //public static string WinsockReset()
+        //{
+        //    int exitCode;
+        //    using (Process p = new Process())
+        //    {
+        //        p.StartInfo.FileName = "cmd.exe";
+        //        p.StartInfo.UseShellExecute = false;
+        //        p.StartInfo.RedirectStandardInput = true;
+        //        p.StartInfo.RedirectStandardOutput = true;
+        //        p.StartInfo.RedirectStandardError = true;
+        //        p.StartInfo.CreateNoWindow = true;
+        //        p.Start();
+
+        //        string _doscmd = "222netsh winsock reset";
+
+        //        p.StandardInput.WriteLine(_doscmd.ToString());
+
+        //        string output = p.StandardOutput.ReadToEnd();
+        //        string error = p.StandardError.ReadToEnd();
+
+        //        exitCode = p.ExitCode;
+
+        //        Console.WriteLine("output>>" + (String.IsNullOrEmpty(output) ? "(none)" : output));
+        //        Console.WriteLine("error>>" + (String.IsNullOrEmpty(error) ? "(none)" : error));
+        //        Console.WriteLine("ExitCode: " + exitCode.ToString(), "ExecuteCommand");
+        //        p.Close();
+
+        //        return error;
+        //    }
+        //}
     }
 }

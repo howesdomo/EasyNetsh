@@ -124,6 +124,19 @@ namespace EasyNetsh
                 MessageBox.Show(this.viewModel.SelectedDevice.Name + "设置完毕");
                 this.bindButtons();
             };
+
+            this.btnWinsockReset.Click += (o, e) =>
+            {
+                string errorMsg = NetshHelper.WinsockReset();
+                if (string.IsNullOrEmpty(errorMsg) == false)
+                {
+                    MessageBox.Show(errorMsg, "Error");
+                }
+                else
+                {
+                    MessageBox.Show("重置成功, 重启Windows系统", "提示");
+                }
+            };
         }
     }
 

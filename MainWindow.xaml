@@ -27,6 +27,7 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -70,6 +71,9 @@
                     <TextBox x:Name="txtDNS2" Text="{Binding Dns2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
                 </StackPanel>
             </Grid>
+            <StackPanel Grid.Row="7">
+                <Button x:Name="btnWinsockReset">重置 Winsock(修复异常无法上网)</Button>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>
