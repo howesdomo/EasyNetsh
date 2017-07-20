@@ -64,12 +64,60 @@ namespace EasyNetsh
                         EasyNetshModel match = this.viewModel.ChangyongList.FirstOrDefault(p => p.Name == tmpName);
                         if (match != null)
                         {
+                            SetUI(match);
                             match.SetIPAddressByNetshHelper();
                             MessageBox.Show(clickTarget.Content.ToString() + "设置完毕");
                         }
                     };
                     this.spChangyong.Children.Add(btn);
                 }
+            }
+        }
+
+        private void SetUI(EasyNetshModel match)
+        {
+            if (match.IsDHCP == true)
+            {
+                return;
+            }
+            
+            if (string.IsNullOrEmpty(match.TargetDevice) == false)
+            {
+                var matchDevice = this.viewModel.DeviceList.FirstOrDefault(j => j.Name.Equals(match.TargetDevice));
+                if (matchDevice != null)
+                {
+                    this.viewModel.SelectedDevice = matchDevice;
+                }
+            }
+
+            if (string.IsNullOrEmpty(match.Name) == false)
+            {
+                this.txtName.Text = match.Name;
+            }
+
+            if (string.IsNullOrEmpty(match.IP) == false)
+            {
+                this.txtIP.Text = match.IP;
+            }
+
+            if (string.IsNullOrEmpty(match.SubMask) == false)
+            {
+                this.txtSubMask.Text = match.SubMask;
+            }
+
+            if (string.IsNullOrEmpty(match.GateWay) == false)
+            {
+                this.txtGateway.Text = match.GateWay;
+            }
+
+            if (string.IsNullOrEmpty(match.DNS_1) == false)
+            {
+                this.txtDNS1.Text = match.DNS_1;
+            }
+
+            if (string.IsNullOrEmpty(match.DNS_2) == false)
+            {
+                this.txtDNS2.Text = match.DNS_2;
             }
         }
 

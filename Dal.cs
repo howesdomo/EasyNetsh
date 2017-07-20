@@ -34,6 +34,7 @@ namespace EasyNetsh
             if (list.Exists(i => i.Name == toAdd.Name))
             {
                 EasyNetshModel match = list.FirstOrDefault(i => i.Name == toAdd.Name);
+                match.TargetDevice = toAdd.TargetDevice;
                 match.IP = toAdd.IP;
                 match.SubMask = toAdd.SubMask;
                 match.GateWay = toAdd.GateWay;
