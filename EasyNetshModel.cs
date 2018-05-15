@@ -134,7 +134,13 @@ namespace Howe.Model
             }
             else
             {
-                Howe.Helper.NetshHelper.SetIPAddress(this.TargetDevice, this.IP, this.SubMask, this.GateWay, this.DNS_1, this.DNS_2);
+                // 由于没有执行返回信息已被弃用
+                // Howe.Helper.NetshHelper.SetIPAddress(this.TargetDevice, this.IP, this.SubMask, this.GateWay, this.DNS_1, this.DNS_2);
+
+                // 由于V2版本运行方式更为严谨所以采用V2
+                Howe.Helper.NetshHelper.SetIPAddressV2(this.TargetDevice, this.IP, this.SubMask, this.GateWay, this.DNS_1, this.DNS_2);
+
+                // Howe.Helper.NetshHelper.SetIPAddressV3(this.TargetDevice, this.IP, this.SubMask, this.GateWay, this.DNS_1, this.DNS_2);
             }
         }
 

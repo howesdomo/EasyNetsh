@@ -65,8 +65,18 @@ namespace EasyNetsh
                         if (match != null)
                         {
                             SetUI(match);
-                            match.SetIPAddressByNetshHelper();
-                            MessageBox.Show(clickTarget.Content.ToString() + "设置完毕");
+                            try
+                            {
+                                this.Cursor = Cursors.Wait;
+                                match.SetIPAddressByNetshHelper();
+                                this.Cursor = Cursors.Arrow;
+                                MessageBox.Show(clickTarget.Content.ToString() + "设置完毕");
+                            }
+                            catch (Exception ex)
+                            {
+                                this.Cursor = Cursors.Arrow;
+                                MessageBox.Show(ex.Message);
+                            }
                         }
                     };
                     this.spChangyong.Children.Add(btn);
@@ -80,7 +90,7 @@ namespace EasyNetsh
             {
                 return;
             }
-            
+
             if (string.IsNullOrEmpty(match.TargetDevice) == false)
             {
                 var matchDevice = this.viewModel.DeviceList.FirstOrDefault(j => j.Name.Equals(match.TargetDevice));
@@ -160,16 +170,25 @@ namespace EasyNetsh
                     this.viewModel.Name
                 );
 
-                toAdd.SetIPAddressByNetshHelper();
-
-                if (!string.IsNullOrEmpty(toAdd.Name))
+                try
                 {
-                    Dal dal = new Dal();
-                    dal.Add(this.viewModel.ChangyongList, toAdd);
-                    dal.Save(this.viewModel.ChangyongList, App.FullName);
+                    this.Cursor = Cursors.Wait;
+                    toAdd.SetIPAddressByNetshHelper();
+                    if (!string.IsNullOrEmpty(toAdd.Name))
+                    {
+                        Dal dal = new Dal();
+                        dal.Add(this.viewModel.ChangyongList, toAdd);
+                        dal.Save(this.viewModel.ChangyongList, App.FullName);
+                    }
+                    this.Cursor = Cursors.Arrow;
+                    MessageBox.Show(this.viewModel.SelectedDevice.Name + "设置完毕");
+                }
+                catch (Exception ex)
+                {
+                    this.Cursor = Cursors.Arrow;
+                    MessageBox.Show(ex.Message);
                 }
 
-                MessageBox.Show(this.viewModel.SelectedDevice.Name + "设置完毕");
                 this.bindButtons();
             };
 
