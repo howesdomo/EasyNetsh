@@ -67,15 +67,16 @@ namespace Howe.Helper
         }
 
         /// <summary>
-        /// 获取所有物理网卡&无线网卡列表, 按 无线网卡 > 插线网卡 排序
+        /// 获取所有物理网卡&无线网卡列表, 按 无线网卡 > 有线网卡 排序
         /// </summary>
         /// <returns></returns>
         public static List<NetworkInterfaceAdv> GetAllDevice()
         {
             List<NetworkInterfaceAdv> all = WinNetworkHelper.GetAll();
             List<NetworkInterfaceAdv> result = new List<NetworkInterfaceAdv>();
-            result.AddRange(all.Where(i => i.CardType == NetworkDeviceType.WirelessDevice));
-            result.AddRange(all.Where(i => i.CardType == NetworkDeviceType.PhysicalDevice));
+            result.AddRange(all.Where(i => i.CardType == NetworkDeviceType.WirelessDevice)); // 无线网卡
+            result.AddRange(all.Where(i => i.CardType == NetworkDeviceType.PhysicalDevice)); // 有线网卡
+            result.Add(new NetworkInterfaceAdv(null, "未知网卡")); // 刷新
             return result;
         }
     }
@@ -83,8 +84,16 @@ namespace Howe.Helper
 
     public class NetworkInterfaceAdv
     {
+        public const string RefleshInfo = "刷新...";
+
         public NetworkInterfaceAdv(NetworkInterface adapter, string typeCode)
         {
+            if (adapter == null)
+            {
+                this.Name = RefleshInfo;
+                return;
+            }
+
             this.Id = adapter.Id; // 获取网络适配器的标识符    
             this.Name = adapter.Name; // 获取网络适配器的名称    
             this.Description = adapter.Description; // 获取接口的描述    
@@ -242,7 +251,14 @@ namespace Howe.Helper
                 string result = string.Empty;
                 try
                 {
-                    result = string.Format("{0}( {1} )", this.Name, this.IPAddress);
+                    if (this.Name == RefleshInfo)
+                    {
+                        result = this.Name;
+                    }
+                    else
+                    {
+                        result = string.Format("{0}( {1} )", this.Name, this.IPAddress);
+                    }
                 }
                 catch (Exception) { }
                 return result;

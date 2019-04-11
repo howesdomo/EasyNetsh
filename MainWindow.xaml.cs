@@ -36,8 +36,17 @@ namespace EasyNetsh
 
         private void initUI()
         {
-            // this.spChangyong
+            // 1
             this.bindButtons();
+
+            // 2
+            this.viewModel.Is_IP_1_Checked = true;
+            this.viewModel.Is_IP_2_Checked = false;
+            this.viewModel.Is_DNS_1_Checked = true;
+            this.viewModel.Is_DNS_2_Checked = false;
+
+            this.rbtn_IP_Click_ActualMethod();
+            this.rbtn_DNS_Click_ActualMethod();
         }
 
         private void bindButtons()
@@ -77,6 +86,10 @@ namespace EasyNetsh
                                 this.Cursor = Cursors.Arrow;
                                 MessageBox.Show(ex.Message);
                             }
+                            finally
+                            {
+                                this.viewModel.UpdateDeviceList(match.TargetDevice);
+                            }
                         }
                     };
                     this.spChangyong.Children.Add(btn);
@@ -100,6 +113,9 @@ namespace EasyNetsh
                 }
             }
 
+            this.viewModel.Is_IP_1_Checked = match.Is_IP_DHCP;
+            this.viewModel.Is_IP_2_Checked = !this.viewModel.Is_IP_1_Checked;
+
             if (string.IsNullOrEmpty(match.Name) == false)
             {
                 this.txtName.Text = match.Name;
@@ -120,6 +136,9 @@ namespace EasyNetsh
                 this.txtGateway.Text = match.GateWay;
             }
 
+            this.viewModel.Is_DNS_1_Checked = match.Is_DNS_DHCP;
+            this.viewModel.Is_DNS_2_Checked = !this.viewModel.Is_DNS_1_Checked;
+
             if (string.IsNullOrEmpty(match.DNS_1) == false)
             {
                 this.txtDNS1.Text = match.DNS_1;
@@ -131,21 +150,11 @@ namespace EasyNetsh
             }
         }
 
-        private void initData()
-        {
-            //this.viewModel.Name = "公司";
-            //this.viewModel.Ip = "192.168.1.215";
-            //this.viewModel.SubMask = "255.255.255.0";
-            //this.viewModel.Gateway = "192.168.1.1";
-            //this.viewModel.Dns1 = "211.162.62.2";
-            //this.viewModel.Dns2 = "192.168.1.5";
-        }
-
         private void initEvent()
         {
             this.Loaded += (o, e) =>
             {
-                this.initData();
+
             };
 
             this.btnDHCP.Click += (o, e) =>
@@ -153,18 +162,24 @@ namespace EasyNetsh
                 NetshHelper.SetDHCP(this.viewModel.SelectedDevice.Name);
                 Button btn = o as Button;
                 MessageBox.Show(this.viewModel.SelectedDevice.Name + "设置完毕");
+                this.viewModel.UpdateDeviceList(this.viewModel.SelectedDevice.Name);
             };
 
             this.btnSetBySelf.Click += (o, e) =>
             {
                 Button btn = o as Button;
 
+                //bool is_IP_DHCP = this.rbtn_IP_1.IsChecked.Value;
+                //bool is_DNS_DHCP = this.rbtn_DNS_1.IsChecked.Value;
+
                 EasyNetshModel toAdd = new EasyNetshModel
                 (
                     this.viewModel.SelectedDevice.Name,
+                    this.viewModel.Is_IP_1_Checked.Value,
                     this.viewModel.Ip,
                     this.viewModel.SubMask,
                     this.viewModel.Gateway,
+                    this.viewModel.Is_DNS_1_Checked.Value,
                     this.viewModel.Dns1,
                     this.viewModel.Dns2,
                     this.viewModel.Name
@@ -182,11 +197,16 @@ namespace EasyNetsh
                     }
                     this.Cursor = Cursors.Arrow;
                     MessageBox.Show(this.viewModel.SelectedDevice.Name + "设置完毕");
+
                 }
                 catch (Exception ex)
                 {
                     this.Cursor = Cursors.Arrow;
                     MessageBox.Show(ex.Message);
+                }
+                finally
+                {
+                    this.viewModel.UpdateDeviceList(toAdd.TargetDevice);
                 }
 
                 this.bindButtons();
@@ -204,6 +224,74 @@ namespace EasyNetsh
                     MessageBox.Show("重置成功, 重启Windows系统", "提示");
                 }
             };
+
+
+            this.rbtn_IP_1.Click += rbtn_IP_1_Click;
+            this.rbtn_IP_2.Click += rbtn_IP_2_Click;
+
+            this.rbtn_DNS_1.Click += rbtn_DNS_1_Click;
+            this.rbtn_DNS_2.Click += rbtn_DNS_2_Click;
+        }
+
+        private void rbtn_IP_2_Click(object sender, RoutedEventArgs e)
+        {
+            rbtn_IP_Click_ActualMethod();
+        }
+
+        private void rbtn_IP_1_Click(object sender, RoutedEventArgs e)
+        {
+            rbtn_IP_Click_ActualMethod();
+        }
+
+        private void rbtn_IP_Click_ActualMethod()
+        {
+            bool? isDHCP = this.rbtn_IP_1.IsChecked;
+            if (isDHCP == true)
+            {
+                //txtIP.Text = string.Empty;
+                //txtSubMask.Text = string.Empty;
+                //txtGateway.Text = string.Empty;
+
+                txtIP.IsEnabled = false;
+                txtSubMask.IsEnabled = false;
+                txtGateway.IsEnabled = false;
+            }
+            else
+            {
+                txtIP.IsEnabled = true;
+                txtSubMask.IsEnabled = true;
+                txtGateway.IsEnabled = true;
+            }
+        }
+
+
+
+        private void rbtn_DNS_1_Click(object sender, RoutedEventArgs e)
+        {
+            rbtn_DNS_Click_ActualMethod();
+        }
+
+        private void rbtn_DNS_2_Click(object sender, RoutedEventArgs e)
+        {
+            rbtn_DNS_Click_ActualMethod();
+        }
+
+        private void rbtn_DNS_Click_ActualMethod()
+        {
+            bool? isDHCP = this.rbtn_DNS_1.IsChecked;
+            if (isDHCP == true)
+            {
+                //txtDNS1.Text = string.Empty;
+                //txtDNS2.Text = string.Empty;
+
+                txtDNS1.IsEnabled = false;
+                txtDNS2.IsEnabled = false;
+            }
+            else
+            {
+                txtDNS1.IsEnabled = true;
+                txtDNS2.IsEnabled = true;
+            }
         }
     }
 
@@ -256,13 +344,38 @@ namespace EasyNetsh
             }
         }
 
+        /// <summary>
+        /// 获取最新的列表信息
+        /// </summary>
+        /// <param name="deviceName">网络设备名称</param>
+        public void UpdateDeviceList(string deviceName = "")
+        {
+            deviceList = WinNetworkHelper.GetAllDevice();
+            this.OnPropertyChanged("DeviceList");
+
+            if (deviceName.IsNullOrWhiteSpace() == false)
+            {
+                this.SelectedDevice = this.DeviceList.FirstOrDefault(i => i.Name == deviceName);
+            }
+            else
+            {
+                this.OnPropertyChanged("SelectedDevice");
+            }
+        }
+
+
         #region Setting
 
         private NetworkInterfaceAdv selectedDevice;
 
+        private bool? is_IP_1_Checked;
+        private bool? is_IP_2_Check;
         private string ip;
         private string submask;
         private string gateway;
+
+        private bool? is_DNS_1_Checked;
+        private bool? is_DNS_2_Checked;
         private string dns1;
         private string dns2;
 
@@ -281,8 +394,42 @@ namespace EasyNetsh
             }
             set
             {
+                if (value.Name == "刷新...")
+                {
+                    UpdateDeviceList();
+                    return;
+                }
+
                 selectedDevice = value;
                 this.OnPropertyChanged("SelectedDevice");
+                this.OnPropertyChanged("BtnEnabled");
+            }
+        }
+
+        public bool? Is_IP_1_Checked
+        {
+            get
+            {
+                return is_IP_1_Checked;
+            }
+            set
+            {
+                is_IP_1_Checked = value;
+                this.OnPropertyChanged("Is_IP_1_Checked");
+                this.OnPropertyChanged("BtnEnabled");
+            }
+        }
+
+        public bool? Is_IP_2_Checked
+        {
+            get
+            {        
+                return is_IP_2_Check;
+            }
+            set
+            {
+                is_IP_2_Check = value;
+                this.OnPropertyChanged("Is_IP_2_Checked");
                 this.OnPropertyChanged("BtnEnabled");
             }
         }
@@ -328,6 +475,35 @@ namespace EasyNetsh
             {
                 gateway = value;
                 this.OnPropertyChanged("Gateway");
+                this.OnPropertyChanged("BtnEnabled");
+            }
+        }
+
+        public bool? Is_DNS_1_Checked
+        {
+            get
+            {
+                return is_DNS_1_Checked;
+            }
+
+            set
+            {
+                is_DNS_1_Checked = value;
+                this.OnPropertyChanged("Is_DNS_1_Checked");
+                this.OnPropertyChanged("BtnEnabled");
+            }
+        }
+
+        public bool? Is_DNS_2_Checked
+        {
+            get
+            {
+                return is_DNS_2_Checked;
+            }
+            set
+            {
+                is_DNS_2_Checked = value;
+                this.OnPropertyChanged("Is_DNS_2_Checked");
                 this.OnPropertyChanged("BtnEnabled");
             }
         }
@@ -385,9 +561,11 @@ namespace EasyNetsh
                 EasyNetshModel tmp = new EasyNetshModel
                 (
                     this.SelectedDevice.Name,
+                    this.Is_IP_1_Checked.Value,
                     this.Ip,
                     this.SubMask,
                     this.Gateway,
+                    this.Is_DNS_1_Checked.Value,
                     this.Dns1,
                     this.Dns2,
                     this.Name

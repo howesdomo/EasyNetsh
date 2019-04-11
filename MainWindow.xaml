@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:EasyNetsh"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="EasyNetsh V 0.0.0.0" Height="350" Width="525">
-    <Grid>
+        Title="EasyNetsh V 0.0.0.0" Height="480" Width="525" Icon="Resources/Images/logo.ico">
+    <Grid Background="#e5e5e5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.3*"></ColumnDefinition>
             <ColumnDefinition Width="0.7*"></ColumnDefinition>
@@ -23,10 +23,9 @@
         <Grid x:Name="gSheZhi" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
+                <RowDefinition Height="60"></RowDefinition>
+                <RowDefinition Height="60"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid>
@@ -39,37 +38,51 @@
             </Grid>
             <Button x:Name="btnDHCP" Content="DHCP" Grid.Row="1"></Button>
             <Button x:Name="btnSetBySelf" Content="设置" Grid.Row="2" IsEnabled="{Binding BtnEnabled, Mode=OneWay}"></Button>
-            <Grid Grid.Row="3" Grid.RowSpan="2">
+            <Grid Grid.Row="3">
                 <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Row="1">
-                    <TextBlock Text="名称"></TextBlock>
-                    <TextBox x:Name="txtName" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="名称" Margin="10 5 0 0"></TextBlock>
+                    <TextBox x:Name="txtName" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="10 0 10 0" />
                 </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="1">
-                    <TextBlock Text="IP"></TextBlock>
-                    <TextBox x:Name="txtIP" Text="{Binding Ip, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
-                    <TextBlock Text="网关"></TextBlock>
-                    <TextBox x:Name="txtGateway" Text="{Binding Gateway, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
-                </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="2">
-                    <TextBlock Text="子网掩码"></TextBlock>
-                    <TextBox x:Name="txtSubMask" Text="{Binding SubMask, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
-                </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="3">
-                    <TextBlock Text="首选DNS"></TextBlock>
-                    <TextBox x:Name="txtDNS1" Text="{Binding Dns1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
-                    <TextBlock Text="备用DNS"></TextBlock>
-                    <TextBox x:Name="txtDNS2" Text="{Binding Dns2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
-                </StackPanel>
+
+                <RadioButton x:Name="rbtn_IP_1" IsChecked="{Binding Is_IP_1_Checked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="0" Content="自动获取 IP 地址" Margin="14.5 5 0 5" GroupName="IP" />
+                <GroupBox Grid.Row="2" Grid.Column="0" Margin="5 0 5 0">
+                    <GroupBox.Header>
+                        <RadioButton x:Name="rbtn_IP_2" IsChecked="{Binding Is_IP_2_Checked, UpdateSourceTrigger=PropertyChanged}" Content="使用下面的IP地址" GroupName="IP" />
+                    </GroupBox.Header>
+                    <StackPanel>
+                        <TextBlock Text="IP"></TextBlock>
+                        <TextBox x:Name="txtIP" Text="{Binding Ip, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+                        <TextBlock Text="网关"></TextBlock>
+                        <TextBox x:Name="txtGateway" Text="{Binding Gateway, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+                        <TextBlock Text="子网掩码"></TextBlock>
+                        <TextBox x:Name="txtSubMask" Text="{Binding SubMask, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+                    </StackPanel>
+                </GroupBox>
+
+                <RadioButton x:Name="rbtn_DNS_1" IsChecked="{Binding Is_DNS_1_Checked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Grid.Row="3" Grid.Column="0" Content="自动获取 DNS 服务器地址" Margin="14.5 5 0 5" GroupName="DNS" />
+                <GroupBox Grid.Row="4" Grid.Column="0" Margin="5 0 5 0">
+                    <GroupBox.Header>
+                        <RadioButton x:Name="rbtn_DNS_2" IsChecked="{Binding Is_DNS_2_Checked, UpdateSourceTrigger=PropertyChanged}" Content="使用下面的 DNS 服务器地址" GroupName="DNS" />
+                    </GroupBox.Header>
+                    <StackPanel>
+                        <TextBlock Text="首选DNS"></TextBlock>
+                        <TextBox x:Name="txtDNS1" Text="{Binding Dns1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+                        <TextBlock Text="备用DNS"></TextBlock>
+                        <TextBox x:Name="txtDNS2" Text="{Binding Dns2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+                    </StackPanel>
+                </GroupBox>
             </Grid>
             <StackPanel Grid.Row="7">
                 <Button x:Name="btnWinsockReset">重置 Winsock(修复异常无法上网)</Button>

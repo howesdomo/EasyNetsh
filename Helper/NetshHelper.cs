@@ -7,6 +7,12 @@ using System.Text;
 namespace Howe.Helper
 {
     /// <summary>
+    /// V 2
+    /// Author : Howe
+    /// Date   : 2019.04.11
+    /// Description : 分离 IP 与 DNS 的设置
+    /// 
+    /// V 1
     /// Author : Howe
     /// Date   : 2015.11.01
     /// Description : Dos 命令 Netsh 工具集
@@ -21,7 +27,7 @@ namespace Howe.Helper
         {
             //string _doscmd = "netsh interface ip set address 本地连接 DHCP";
             string _doscmd = string.Format("netsh interface ip set address {0} DHCP", targetDevice);
-            string _doscmd_dns = string.Format("netsh interface ip set dns {0} dhcp", targetDevice);
+            string _doscmd_dns = string.Format("netsh interface ip set dns {0} DHCP", targetDevice);
             using (Process p = new Process())
             {
                 p.StartInfo.FileName = "cmd.exe";
@@ -32,6 +38,50 @@ namespace Howe.Helper
                 p.StartInfo.CreateNoWindow = true;
                 p.Start();
                 p.StandardInput.WriteLine(_doscmd);
+                p.StandardInput.WriteLine(_doscmd_dns);
+                p.Refresh();
+                p.StandardInput.WriteLine("exit");
+            }
+        }
+
+        /// <summary>
+        /// 将IP设置为自动获取
+        /// </summary>
+        /// <param name="targetDevice">目标网卡</param>
+        public static void Set_IP_DHCP(string targetDevice)
+        {
+            string _doscmd = string.Format("netsh interface ip set address {0} DHCP", targetDevice);
+            using (Process p = new Process())
+            {
+                p.StartInfo.FileName = "cmd.exe";
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardInput = true;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.StartInfo.CreateNoWindow = true;
+                p.Start();
+                p.StandardInput.WriteLine(_doscmd);
+                p.Refresh();
+                p.StandardInput.WriteLine("exit");
+            }
+        }
+
+        /// <summary>
+        /// 将DNS设置为自动获取
+        /// </summary>
+        /// <param name="targetDevice">目标网卡</param>
+        public static void Set_DNS_DHCP(string targetDevice)
+        {
+            string _doscmd_dns = string.Format("netsh interface ip set dns {0} dhcp", targetDevice);
+            using (Process p = new Process())
+            {
+                p.StartInfo.FileName = "cmd.exe";
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardInput = true;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.StartInfo.CreateNoWindow = true;
+                p.Start();
                 p.StandardInput.WriteLine(_doscmd_dns);
                 p.Refresh();
                 p.StandardInput.WriteLine("exit");
@@ -129,6 +179,46 @@ namespace Howe.Helper
                 // netsh interface ip add dnsservers name="无线网络连接" addr=202.96.128.86 index=2
                 //_doscmd = "netsh interface ip add dnsservers name=\"无线网络连接\" addr=" + dns2 + " index=2";
                 //_doscmd = "netsh interface ip add dnsservers name=\"WLAN\" addr=" + dns2 + " index=2";
+                cmdArguments = string.Format("netsh interface ip add dnsservers name=\"{0}\" addr={1} index=2", targetDevice, dns2);
+                Util.ProcessResult r3 = Util.ProgressUtils.ExcuteBatCMD(cmdArguments);
+                NetshHelper.GetErrorMsg(cmdArguments, r3);
+            }
+        }
+
+        /// <summary>
+        /// 精简自 SetIPAddressV2
+        /// </summary>
+        /// <param name="targetDevice">目标网卡</param>
+        /// <param name="ipaddress">IP地址</param>
+        /// <param name="submask">子网掩码</param>
+        /// <param name="gateway">网关</param>
+        /// <param name="dns1">首用DNS</param>
+        /// <param name="dns2">备用DNS</param>
+        public static void SetIP(string targetDevice, string ipaddress, string submask, string gateway)
+        {
+            string cmdArguments = string.Format("netsh interface ip set address name=\"{0}\" source= static addr={1} mask={2} gateway={3}", targetDevice, ipaddress, submask, gateway);
+            Util.ProcessResult r1 = Util.ProgressUtils.ExcuteBatCMD(cmdArguments);
+            NetshHelper.GetErrorMsg(cmdArguments, r1);
+        }
+
+        /// <summary>
+        /// 精简自 SetIPAddressV2
+        /// </summary>
+        /// <param name="targetDevice">目标网卡</param>
+        /// <param name="dns1">首用DNS</param>
+        /// <param name="dns2">备用DNS</param>
+        public static void SetDNS(string targetDevice, string dns1, string dns2)
+        {
+            string cmdArguments = string.Empty;
+            if (!string.IsNullOrEmpty(dns1))
+            {
+                cmdArguments = string.Format("netsh interface ip set dnsservers name=\"{0}\" static addr={1} primary", targetDevice, dns1);
+                Util.ProcessResult r2 = Util.ProgressUtils.ExcuteBatCMD(cmdArguments);
+                NetshHelper.GetErrorMsg(cmdArguments, r2);
+            }
+
+            if (!string.IsNullOrEmpty(dns2))
+            {
                 cmdArguments = string.Format("netsh interface ip add dnsservers name=\"{0}\" addr={1} index=2", targetDevice, dns2);
                 Util.ProcessResult r3 = Util.ProgressUtils.ExcuteBatCMD(cmdArguments);
                 NetshHelper.GetErrorMsg(cmdArguments, r3);
