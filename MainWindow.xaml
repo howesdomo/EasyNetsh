@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:EasyNetsh"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
+        Topmost="True"
         Title="EasyNetsh V 0.0.0.0" Height="480" Width="525" Icon="Resources/Images/logo.ico">
     <Grid Background="#e5e5e5">
         <Grid.ColumnDefinitions>
