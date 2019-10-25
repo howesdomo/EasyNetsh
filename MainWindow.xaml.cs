@@ -79,12 +79,12 @@ namespace EasyNetsh
                                 this.Cursor = Cursors.Wait;
                                 match.SetIPAddressByNetshHelper();
                                 this.Cursor = Cursors.Arrow;
-                                MessageBox.Show(clickTarget.Content.ToString() + "设置完毕");
+                                MessageBox.Show(owner: this, messageBoxText: $"{clickTarget.Content.ToString()}设置完毕");
                             }
                             catch (Exception ex)
                             {
                                 this.Cursor = Cursors.Arrow;
-                                MessageBox.Show(ex.Message);
+                                MessageBox.Show(owner: this, messageBoxText: ex.Message);
                             }
                             finally
                             {
@@ -161,16 +161,13 @@ namespace EasyNetsh
             {
                 NetshHelper.SetDHCP(this.viewModel.SelectedDevice.Name);
                 Button btn = o as Button;
-                MessageBox.Show(this.viewModel.SelectedDevice.Name + "设置完毕");
+                MessageBox.Show(owner: this, messageBoxText: $"{this.viewModel.SelectedDevice.Name}设置完毕");
                 this.viewModel.UpdateDeviceList(this.viewModel.SelectedDevice.Name);
             };
 
             this.btnSetBySelf.Click += (o, e) =>
             {
                 Button btn = o as Button;
-
-                //bool is_IP_DHCP = this.rbtn_IP_1.IsChecked.Value;
-                //bool is_DNS_DHCP = this.rbtn_DNS_1.IsChecked.Value;
 
                 EasyNetshModel toAdd = new EasyNetshModel
                 (
@@ -196,13 +193,12 @@ namespace EasyNetsh
                         dal.Save(this.viewModel.ChangyongList, App.FullName);
                     }
                     this.Cursor = Cursors.Arrow;
-                    MessageBox.Show(this.viewModel.SelectedDevice.Name + "设置完毕");
-
+                    MessageBox.Show(owner: this, messageBoxText: $"{this.viewModel.SelectedDevice.Name}设置完毕");
                 }
                 catch (Exception ex)
                 {
                     this.Cursor = Cursors.Arrow;
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(owner: this, messageBoxText: ex.Message);
                 }
                 finally
                 {
@@ -217,11 +213,11 @@ namespace EasyNetsh
                 string errorMsg = NetshHelper.WinsockReset();
                 if (string.IsNullOrEmpty(errorMsg) == false)
                 {
-                    MessageBox.Show(errorMsg, "Error");
+                    MessageBox.Show(owner: this, messageBoxText: errorMsg, caption: "捕获异常");
                 }
                 else
                 {
-                    MessageBox.Show("重置成功, 重启Windows系统", "提示");
+                    MessageBox.Show(owner: this, messageBoxText: "重置成功, 重启Windows系统", caption: "提示");
                 }
             };
 
@@ -248,10 +244,6 @@ namespace EasyNetsh
             bool? isDHCP = this.rbtn_IP_1.IsChecked;
             if (isDHCP == true)
             {
-                //txtIP.Text = string.Empty;
-                //txtSubMask.Text = string.Empty;
-                //txtGateway.Text = string.Empty;
-
                 txtIP.IsEnabled = false;
                 txtSubMask.IsEnabled = false;
                 txtGateway.IsEnabled = false;
@@ -281,9 +273,6 @@ namespace EasyNetsh
             bool? isDHCP = this.rbtn_DNS_1.IsChecked;
             if (isDHCP == true)
             {
-                //txtDNS1.Text = string.Empty;
-                //txtDNS2.Text = string.Empty;
-
                 txtDNS1.IsEnabled = false;
                 txtDNS2.IsEnabled = false;
             }
@@ -423,7 +412,7 @@ namespace EasyNetsh
         public bool? Is_IP_2_Checked
         {
             get
-            {        
+            {
                 return is_IP_2_Check;
             }
             set
