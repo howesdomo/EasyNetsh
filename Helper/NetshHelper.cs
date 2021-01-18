@@ -212,14 +212,14 @@ namespace Howe.Helper
             string cmdArguments = string.Empty;
             if (!string.IsNullOrEmpty(dns1))
             {
-                cmdArguments = string.Format("netsh interface ip set dnsservers name=\"{0}\" static addr={1} primary", targetDevice, dns1);
+                cmdArguments = string.Format("netsh interface ip set dnsservers name=\"{0}\" static addr={1} primary validate=no", targetDevice, dns1);
                 Util.ProcessResult r2 = Util.ProgressUtils.ExcuteBatCMD(cmdArguments);
                 NetshHelper.GetErrorMsg(cmdArguments, r2);
             }
 
             if (!string.IsNullOrEmpty(dns2))
             {
-                cmdArguments = string.Format("netsh interface ip add dnsservers name=\"{0}\" addr={1} index=2", targetDevice, dns2);
+                cmdArguments = string.Format("netsh interface ip add dnsservers name=\"{0}\" addr={1} index=2 validate=no", targetDevice, dns2);
                 Util.ProcessResult r3 = Util.ProgressUtils.ExcuteBatCMD(cmdArguments);
                 NetshHelper.GetErrorMsg(cmdArguments, r3);
             }

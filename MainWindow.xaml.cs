@@ -77,13 +77,16 @@ namespace EasyNetsh
                             try
                             {
                                 this.Cursor = Cursors.Wait;
+                                this.ucBusy.IsBusy = true;
                                 match.SetIPAddressByNetshHelper();
                                 this.Cursor = Cursors.Arrow;
+                                this.ucBusy.IsBusy = false;
                                 MessageBox.Show(owner: this, messageBoxText: $"{clickTarget.Content.ToString()}设置完毕");
                             }
                             catch (Exception ex)
                             {
                                 this.Cursor = Cursors.Arrow;
+                                this.ucBusy.IsBusy = false;
                                 MessageBox.Show(owner: this, messageBoxText: ex.Message);
                             }
                             finally
@@ -185,6 +188,7 @@ namespace EasyNetsh
                 try
                 {
                     this.Cursor = Cursors.Wait;
+                    this.ucBusy.IsBusy = true;
                     toAdd.SetIPAddressByNetshHelper();
                     if (!string.IsNullOrEmpty(toAdd.Name))
                     {
@@ -193,11 +197,13 @@ namespace EasyNetsh
                         dal.Save(this.viewModel.ChangyongList, App.FullName);
                     }
                     this.Cursor = Cursors.Arrow;
+                    this.ucBusy.IsBusy = false;
                     MessageBox.Show(owner: this, messageBoxText: $"{this.viewModel.SelectedDevice.Name}设置完毕");
                 }
                 catch (Exception ex)
                 {
                     this.Cursor = Cursors.Arrow;
+                    this.ucBusy.IsBusy = false;
                     MessageBox.Show(owner: this, messageBoxText: ex.Message);
                 }
                 finally
@@ -383,7 +389,7 @@ namespace EasyNetsh
             }
             set
             {
-                if (value.Name == "刷新...")
+                if (value != null && value.Name == "刷新...")
                 {
                     UpdateDeviceList();
                     return;
